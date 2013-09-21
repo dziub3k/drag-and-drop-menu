@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            
+        </style>
+        <script src="js/jquery-1.10.2.min.js"></script>
+        <script src="js/json2.js"></script>
+        <script src="js/underscore-min.js"></script>
+        <script src="js/backbone-min.js"></script>
+    </head>
+    <body>
+        <section>
+            <ul>
+                <li>Pozycja 1</li>
+                <li>Pozycja 2</li>
+                <li>Pozycja 3
+                    <ul>
+                        <li>Sub pozycja 1</li>
+                        <li>Sub pozycja 2</li>
+                        <li>Sub pozycja 3</li>
+                        <li>Sub pozycja 4</li>
+                    </ul>
+                </li>
+                <li>Pozycja 3</li>
+            </ul>
+        </section>
+        <script>
+            (function($) {
+                var timeout;
+                var RollNews = Backbone.View.extend({
+                    el: '.article-wrappe',
+                    events: {
+                    },
+                    initialize: function() {
+                        _.bindAll(this, 'handler');
+                        this.$el.bind("mouseover", this.handler);
+                    },
+                    teardown: function () {
+                
+                    },
+                    handler: function(event) {
+                        
+                        var currentX, currentY, timeout,
+                                args = arguments,
+                                target = $(event.target),
+                                previousX = event.pageX,
+                                previousY = event.pageY;
+                        
+                        function track(event) {
+                            currentX = event.pageX;
+                            currentY = event.pageY;
+                        }
+                        ;
+                        function clear() {
+                            target
+                                    .unbind("mousemove", track)
+                                    .unbind("mouseout", clear);
+                            clearTimeout(timeout);
+                        }
+                        function handler() {
+                            var prop,
+                                    orig = event;
+                            if ((Math.abs(previousX - currentX) +
+                                    Math.abs(previousY - currentY)) < 7) {
+                                console.log("wejsciowe");
+                                clear();
+                                event = $.Event("hoverintent");
+                                for (prop in orig) {
+                                    if (!(prop in event)) {
+                                        event[ prop ] = orig[ prop ];
+                                    }
+                                }
+                                // Prevent accessing the original event since the new event
+                                // is fired asynchronously and the old event is no longer
+                                // usable (#6028)
+                                delete event.originalEvent;
+                                target.trigger(event);
+                            } else {                                
+                                previousX = currentX;
+                                previousY = currentY;
+                                timeout = setTimeout(handler, 100);
+                            }
+                        }
+                        timeout = setTimeout(handler, 100);
+                        target.bind({
+                            mousemove: track,
+                            mouseout: clear
+                        });
+                    }
+                });
+
+                var roll = new RollNews();
+            })(jQuery);
+        </script>
+    </body>
+</html>
