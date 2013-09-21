@@ -4,9 +4,23 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style>
-            
+            ul {
+                list-style: none;
+            }
+            li {
+                cursor: pointer;
+                border: 1px solid #000;
+                width: 200px;
+                height: auto;
+                display: block;
+            }
+            li ul li{
+                width: 150px;
+                height: 25px;
+            }
         </style>
         <script src="js/jquery-1.10.2.min.js"></script>
+        <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
         <script src="js/json2.js"></script>
         <script src="js/underscore-min.js"></script>
         <script src="js/backbone-min.js"></script>
@@ -28,71 +42,17 @@
             </ul>
         </section>
         <script>
-            (function($) {
-                var timeout;
-                var RollNews = Backbone.View.extend({
-                    el: '.article-wrappe',
+            (function($) {                
+                var Menu = Backbone.View.extend({
+                    el: 'section ul',
                     events: {
                     },
                     initialize: function() {
-                        _.bindAll(this, 'handler');
-                        this.$el.bind("mouseover", this.handler);
-                    },
-                    teardown: function () {
-                
-                    },
-                    handler: function(event) {
-                        
-                        var currentX, currentY, timeout,
-                                args = arguments,
-                                target = $(event.target),
-                                previousX = event.pageX,
-                                previousY = event.pageY;
-                        
-                        function track(event) {
-                            currentX = event.pageX;
-                            currentY = event.pageY;
-                        }
-                        ;
-                        function clear() {
-                            target
-                                    .unbind("mousemove", track)
-                                    .unbind("mouseout", clear);
-                            clearTimeout(timeout);
-                        }
-                        function handler() {
-                            var prop,
-                                    orig = event;
-                            if ((Math.abs(previousX - currentX) +
-                                    Math.abs(previousY - currentY)) < 7) {
-                                console.log("wejsciowe");
-                                clear();
-                                event = $.Event("hoverintent");
-                                for (prop in orig) {
-                                    if (!(prop in event)) {
-                                        event[ prop ] = orig[ prop ];
-                                    }
-                                }
-                                // Prevent accessing the original event since the new event
-                                // is fired asynchronously and the old event is no longer
-                                // usable (#6028)
-                                delete event.originalEvent;
-                                target.trigger(event);
-                            } else {                                
-                                previousX = currentX;
-                                previousY = currentY;
-                                timeout = setTimeout(handler, 100);
-                            }
-                        }
-                        timeout = setTimeout(handler, 100);
-                        target.bind({
-                            mousemove: track,
-                            mouseout: clear
-                        });
-                    }
-                });
 
-                var roll = new RollNews();
+                    },
+                    
+                });
+                new Menu();
             })(jQuery);
         </script>
     </body>
